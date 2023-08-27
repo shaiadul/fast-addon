@@ -56,10 +56,45 @@ class Shaiadul_team_members extends \Elementor\Widget_Base {
 				
 			]
 		);
+
+		// create a repeater
+		$this->add_control(
+			'social_links',
+			[
+				'label' => esc_html__( 'social link', 'elementor-addon' ),
+				'type' => \Elementor\Controls_Manager::REPEATER,
+				'fields' => [
+					[
+						'name' => 'icon',
+						'label' => esc_html__( 'Icon', 'elementor-addon' ),
+						'type' => \Elementor\Controls_Manager::ICONS,
+					],
+					[
+						'name' => 'link',
+						'label' => esc_html__( 'Link', 'elementor-addon' ),
+						'type' => \Elementor\Controls_Manager::URL,
+						'placeholder' => 'https://example.com',
+					],
+				],
+			]
+		);
+
+		// for style tab
+		$this->add_control(
+			'style',
+			[
+				'label' => esc_html__( 'Template Style', 'elementor-addon' ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'default' => 'style1',
+				'options' => [
+					'style1' => esc_html__( 'Style 1', 'elementor-addon' ),
+					'style2' => esc_html__( 'Style 2', 'elementor-addon' ),
+				],
+			]
+		);
 		
 
 		$this->end_controls_section();
-
 		// Content Tab End
 
 	}
@@ -68,16 +103,28 @@ class Shaiadul_team_members extends \Elementor\Widget_Base {
 		$settings = $this->get_settings_for_display();
 		?>
 
-		<div class="shaiadul_team">
+		<div class="shaiadul_team shaiadul_team-<?php echo $settings['style']; ?> ">
+
 			<div class="shaiadul_team_photo">
 				<?php echo wp_get_attachment_image( $settings['photo']['id'], 'large' ); ?>
 			</div>
-			<div class="shaiadul_team_content">
+
+
+			<div class="shaiadul_team_content ">
+
 				<h2><?php echo $settings['title']; ?></h2>
 
 				<?php if(array_key_exists( 'designation', $settings) && !empty($settings['designation'])) : ?>
 				<p><?php echo $settings['designation']; ?></p>
 				<?php endif; ?> 
+				
+				<div class="shaiadul_team_social">
+					<?php foreach($settings['social_links'] as $link) : ?>
+						<a href="<?php echo $link['link']['url']; ?>" target="_blank">
+							<?php \Elementor\Icons_Manager::render_icon( $link['icon'], [ 'aria-hidden' => 'true' ] ); ?>
+						</a>
+					<?php endforeach; ?>
+				</div>
 
 			</div>
 		</div>
